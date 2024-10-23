@@ -12,7 +12,7 @@ The **Expense Tracker** is a personal finance management tool that allows users 
 ## **How to Run**
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/ExpenseTracker.git
+   git clone https://github.com/tiaL-Ops/ExpenseTracker.git
    cd ExpenseTracker
    ```
 
