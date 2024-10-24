@@ -9,6 +9,9 @@ The **Expense Tracker** is a personal finance management tool that allows users 
 - Generate monthly reports showing total income and expenses.
 - Save and load transaction data using CSV files for persistence.
 
+## Current Progress ( Updated after each commit):
+- Add income and error handling
+
 ## **How to Run**
 1. **Clone the repository**:
    ```bash
