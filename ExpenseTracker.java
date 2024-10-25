@@ -9,6 +9,47 @@ public class ExpenseTracker {
     public ExpenseTracker(){
         transactions= new ArrayList<>();
     }
+
+    public void addIncome(LocalDate date, int amount, String category){
+        Transaction income = new Transaction(date,amount,category,"income");
+        transactions.add(income);
+    }
+    public void addExpense(LocalDate date, int amount, String category){
+        Transaction expense= new Transaction(date,amount,category,"expense");
+        transactions.add(expense);
+    }
+    public void addCategory(String category){
+        //
+    }
+    public void displayAllTransactions() {
+        for (Transaction t : transactions) {
+            System.out.println(t);  
+        }
+    }
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+    
+
+    public void filterTransactionsByCategory(String category) {
+        for (Transaction t : transactions) {
+            if (t.getCategory().equals(category)) {
+                System.out.println(t);  
+            }
+        }
+    }
+    
+
+    public void showTotalByCategory(String category) {
+        int total = 0;
+        for (Transaction t : transactions) {
+            if (t.getCategory().equals(category)) {
+                total += t.getAmount(); 
+        }
+        System.out.println("Total for category " + category + ": " + total);
+    }
+}
+
     public static void main(String[] args){
 
         
@@ -44,13 +85,19 @@ public class ExpenseTracker {
         System.out.println("Please enter the category");
         String category=scanner.nextLine();
 
-        System.out.println("Please enter the type");
+        System.out.println("Please enter the type:Income or expense");
         String type=scanner.nextLine();
+        if(type.equalsIgnoreCase("income")){
+            tracker.addIncome(date,amount,category);
+        }else if(type.equalsIgnoreCase("expense")){
+            tracker.addExpense(date, amount, category);
+        }else{
+            System.out.println("Invalid transaction type. Please enter either 'income' or 'expense'.");
+        }
 
-        Transaction transaction = new Transaction(date,amount,category,type);
-        tracker.transactions.add(transaction);
 
-        System.out.println("Your transaction" + transaction);
+
+        System.out.println("Your transaction is saved!");
 
         scanner.close();
 
