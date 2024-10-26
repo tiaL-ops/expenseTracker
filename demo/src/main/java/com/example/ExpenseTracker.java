@@ -108,6 +108,7 @@ public class ExpenseTracker {
             }
            
         }
+        System.out.println("randomtestcheck");
 
         int netBalance = totalIncome - totalExpenses;
         report.append("---------------------------------------------------\n");
