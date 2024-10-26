@@ -76,11 +76,11 @@ public class ExpenseTracker {
     public List<Transaction> getTransactionsByMonth(int month, int year){
         List<Transaction> monthlyTransactions = new ArrayList<>();
         for (Transaction t : transactions){
-            if(t.getDate().getMonthValue() == month) && (t.getDate().getYear() == year){
+            if(t.getDate().getMonthValue() == month && t.getDate().getYear() == year){
                 monthlyTransactions.add(t);
             }
         }
-        return monthlyTransaction;
+        return monthlyTransactions;
     }
 
 
@@ -91,7 +91,7 @@ public class ExpenseTracker {
      * @return A formatted string containing the report with totals and transaction details.
      */
     public String generateMonthlyReport(int month, int year){
-        List<Transaction> monthlyTransactions=getTransactionsByMonth(int month, int year);
+        List<Transaction> monthlyTransactions=getTransactionsByMonth(month, year);
         int totalIncome = 0;
         int totalExpenses=0;
 
@@ -119,54 +119,6 @@ public class ExpenseTracker {
 
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        ExpenseTracker tracker = new ExpenseTracker();
-        LocalDate date = null;
-        int amount = 0;
-
-        while (date == null) {
-            try {
-                System.out.println("Please enter date (YYYY-MM-DD):");
-                date = LocalDate.parse(scanner.nextLine());
-            } catch (DateTimeParseException e) {
-                System.err.println("Invalid date format. Please write the date in the format (YYYY-MM-DD).");
-            }
-        }
-        while (true) {
-            try {
-                System.out.println("Please enter the amount:");
-                amount = Integer.parseInt(scanner.nextLine());
-                break;
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid amount. Please enter a valid integer.");
-            }
-        }
-
-        System.out.println("Please enter the category:");
-        String category = scanner.nextLine();
-
-        System.out.println("Please enter the type: income or expense");
-        String type = scanner.nextLine();
-        if (type.equalsIgnoreCase("income")) {
-            tracker.addIncome(date, amount, category);
-        } else if (type.equalsIgnoreCase("expense")) {
-            tracker.addExpense(date, amount, category);
-        } else {
-            System.out.println("Invalid transaction type. Please enter either 'income' or 'expense'.");
-        }
-
-        System.out.println("Your transaction is saved!");
-
-        // Example usage of the refactored methods
-        System.out.println("All transactions:");
-        System.out.println(tracker.displayAllTransactions());
-
-        System.out.println("Filtered transactions for category " + category + ":");
-        System.out.println(tracker.filterTransactionsByCategory(category));
-
-        System.out.println("Total for category " + category + ": " + tracker.showTotalByCategory(category));
-
-        scanner.close();
-    }
+ 
 }
+    
