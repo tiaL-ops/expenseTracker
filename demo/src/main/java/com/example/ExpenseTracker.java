@@ -103,7 +103,7 @@ public class ExpenseTracker {
             if(t.getType().equalsIgnoreCase("Income")){
                 totalIncome+=t.getAmount();
             }
-            if(t.getType().equalsIgnoreCase("Expenses")){
+            if(t.getType().equalsIgnoreCase("Expense")){
                 totalExpenses+=t.getAmount();
             }
            

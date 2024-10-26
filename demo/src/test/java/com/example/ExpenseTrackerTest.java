@@ -95,4 +95,25 @@ public class ExpenseTrackerTest {
         assertTrue(allTransactions.contains("Rent"), "All transactions should include 'Rent' category.");
         assertTrue(allTransactions.contains("Utilities"), "All transactions should include 'Utilities' category.");
     }
+
+    @Test
+    public void testGenerateMonthlyReport() {
+        // Add example transactions for October 2023
+        tracker.addIncome(LocalDate.of(2023, 10, 1), 1500, "Salary");
+        tracker.addExpense(LocalDate.of(2023, 10, 2), 300, "Rent");
+        tracker.addExpense(LocalDate.of(2023, 10, 3), 100, "Groceries");
+        tracker.addExpense(LocalDate.of(2023, 10, 15), 150, "Utilities");
+
+ 
+        int expectedTotalIncome = 1500;
+        int expectedTotalExpenses = 300 + 100 + 150;
+        int expectedNetBalance = expectedTotalIncome - expectedTotalExpenses;
+
+    
+        String report = tracker.generateMonthlyReport(10, 2023);
+
+        assertTrue(report.contains("Total Income: " + expectedTotalIncome), "Income mismatch in report");
+        assertTrue(report.contains("Total Expenses: " + expectedTotalExpenses), "Expenses mismatch in report");
+        assertTrue(report.contains("Net Balance: " + expectedNetBalance), "Net Balance mismatch in report");
+    }
 }
