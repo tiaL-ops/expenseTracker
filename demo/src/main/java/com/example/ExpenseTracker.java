@@ -67,6 +67,58 @@ public class ExpenseTracker {
         return allTransactions.toString();
     }
 
+    /**
+     * Returns a list of transactions for the specified month and year.
+     * @param month The month to filter by (1 for January, 12 for December).
+     * @param year The year to filter by.
+     * @return A list of transactions within the specified month and year.
+     */
+    public List<Transaction> getTransactionsByMonth(int month, int year){
+        List<Transaction> monthlyTransactions = new ArrayList<>();
+        for (Transaction t : transactions){
+            if(t.getDate().getMonthValue() == month) && (t.getDate().getYear() == year){
+                monthlyTransactions.add(t);
+            }
+        }
+        return monthlyTransaction;
+    }
+
+
+    /**
+     * Generates a monthly report for the specified month and year.
+     * @param month The month to generate the report for (1-12).
+     * @param year The year to generate the report for.
+     * @return A formatted string containing the report with totals and transaction details.
+     */
+    public String generateMonthlyReport(int month, int year){
+        List<Transaction> monthlyTransactions=getTransactionsByMonth(int month, int year);
+        int totalIncome = 0;
+        int totalExpenses=0;
+
+        StringBuilder report = new StringBuilder("Monthly Report for " + month + "/" + year + ":\n");
+        report.append("---------------------------------------------------\n");
+
+        for (Transaction t : monthlyTransactions){
+            report.append(t).append("\n");
+            if(t.getType().equalsIgnoreCase("Income")){
+                totalIncome+=t.getAmount();
+            }
+            if(t.getType().equalsIgnoreCase("Expenses")){
+                totalExpenses+=t.getAmount();
+            }
+           
+        }
+
+        int netBalance = totalIncome - totalExpenses;
+        report.append("---------------------------------------------------\n");
+        report.append("Total Income: ").append(totalIncome).append("\n");
+        report.append("Total Expenses: ").append(totalExpenses).append("\n");
+        report.append("Net Balance: ").append(netBalance).append("\n");
+
+        return report.toString();
+
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ExpenseTracker tracker = new ExpenseTracker();
