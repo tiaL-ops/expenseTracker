@@ -24,4 +24,17 @@ public class Transaction {
     public String toString() {
         return "Date: " + date + " Amount: " + amount + " Category: " + category + " Type: " + type;
     }
+
+    /**
+     * Converts the Transaction object into a JSONObject.
+     * @return A JSONObject representing this transaction.
+     */
+    public JSONObject toJsonObject() {
+        JSONObject obj = new JSONObject();
+        obj.put("date", this.date);
+        obj.put("amount", this.amount);
+        obj.put("category", this.category);
+        obj.put("type", this.type);
+        return obj;
+    }
 }

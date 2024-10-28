@@ -8,12 +8,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class ExpenseTrackerTest {
-
+  
     private ExpenseTracker tracker;
+    private String testFilePath = "test_transactions.json";
+    private ExpenseTracker expenseTracker;
 
     @BeforeEach
     public void setUp() {
         tracker = new ExpenseTracker();
+        expenseTracker = new ExpenseTracker(testFilePath);
     }
 
     @Test
@@ -115,5 +118,32 @@ public class ExpenseTrackerTest {
         assertTrue(report.contains("Total Income: " + expectedTotalIncome), "Income mismatch in report");
         assertTrue(report.contains("Total Expenses: " + expectedTotalExpenses), "Expenses mismatch in report");
         assertTrue(report.contains("Net Balance: " + expectedNetBalance), "Net Balance mismatch in report");
+    }
+
+
+    @Test
+    public void testSaveTransaction_NewUser() {
+        // Arrange
+        String userId = "user1";
+        Transaction transaction = new Transaction("2023-10-27", 100.00, "Groceries", "Expense");
+
+        // Act
+        expenseTracker.saveTransaction(userId, transaction);
+
+        // Assert
+        JSONArray usersArray = parseJsonFile(testFilePath);
+        assertEquals(1, usersArray.size(), "Only one user should exist in the file");
+
+        JSONObject user = (JSONObject) usersArray.get(0);
+        assertEquals(userId, user.get("user_id"), "User ID should match");
+
+        JSONArray transactions = (JSONArray) user.get("transactions");
+        assertEquals(1, transactions.size(), "User should have one transaction");
+
+        JSONObject savedTransaction = (JSONObject) transactions.get(0);
+        assertEquals("2023-10-27", savedTransaction.get("date"));
+        assertEquals(100.00, savedTransaction.get("amount"));
+        assertEquals("Groceries", savedTransaction.get("category"));
+        assertEquals("Expense", savedTransaction.get("type"));
     }
 }

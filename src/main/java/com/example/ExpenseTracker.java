@@ -3,6 +3,15 @@ import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class ExpenseTracker {
 
     private List<Transaction> transactions;
@@ -119,6 +128,72 @@ public class ExpenseTracker {
         return report.toString();
 
     }
+
+        /**
+     * Save the user's transaction to a JSON file.
+     * If the user already exists, the transaction will be added to their list.
+     * If the user does not exist, a new entry for the user will be created.
+     *
+     * @param user_id The user ID to associate with the transaction.
+     * @param transaction The transaction to be saved (e.g., date, amount, category, type).
+     */
+    public void saveTransaction(String user_id, Transaction transaction) {
+        JSONParser parser = new JSONParser();
+        JSONArray usersArray;
+
+        try (FileReader reader = new FileReader("transactions.json")) {
+           
+            usersArray = (JSONArray) parser.parse(reader);
+        } catch (IOException | ParseException e) {
+           
+            usersArray = new JSONArray();
+        }
+
+        
+        boolean userExists = false;
+        for (Object obj : usersArray) {
+            JSONObject userObj = (JSONObject) obj;
+            if (userObj.get("user_id").equals(user_id)) {
+                
+                JSONArray transactions = (JSONArray) userObj.get("transactions");
+                transactions.add(transaction.toJsonObject());  
+                userExists = true;
+                break;
+            }
+        }
+
+        if (!userExists) {
+            
+            JSONObject newUser = new JSONObject();
+            newUser.put("user_id", user_id);
+
+            JSONArray transactions = new JSONArray();
+            transactions.add(transaction.toJsonObject());  
+            newUser.put("transactions", transactions);
+
+            usersArray.add(newUser);
+        }
+
+        
+        try (FileWriter file = new FileWriter("transactions.json")) {
+            file.write(usersArray.toJSONString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+}
+
+    /**
+     * Load and return a list of transactions for a given user.
+     * If the user does not exist, an empty list will be returned.
+     *
+     * @param user_id The user ID whose transactions are being requested.
+     * @return A list of Transaction objects for the specified user.
+     */
+   // public List<Transaction> loadTransactions(String user_id);
+
+
+    
 
  
 }
