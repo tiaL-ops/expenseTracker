@@ -15,6 +15,7 @@ import java.io.IOException;
 public class ExpenseTracker {
 
     private List<Transaction> transactions;
+    private Map<String, JSONObject> userMap = new HashMap<>();
 
     public ExpenseTracker(){
         transactions = new ArrayList<>();
@@ -129,6 +130,22 @@ public class ExpenseTracker {
 
     }
 
+    // Initialize the map with data from JSON
+    public void loadAllUsers() {
+        JSONParser parser = new JSONParser();
+        try (FileReader reader = new FileReader("transactions.json")) {
+            JSONArray usersArray = (JSONArray) parser.parse(reader);
+
+            for (Object obj : usersArray) {
+                JSONObject userObj = (JSONObject) obj;
+                String userId = (String) userObj.get("user_id");
+                userMap.put(userId, userObj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
         /**
      * Save the user's transaction to a JSON file.
      * If the user already exists, the transaction will be added to their list.
@@ -138,50 +155,29 @@ public class ExpenseTracker {
      * @param transaction The transaction to be saved (e.g., date, amount, category, type).
      */
     public void saveTransaction(String user_id, Transaction transaction) {
-        JSONParser parser = new JSONParser();
-        JSONArray usersArray;
-
-        try (FileReader reader = new FileReader("transactions.json")) {
-           
-            usersArray = (JSONArray) parser.parse(reader);
-        } catch (IOException | ParseException e) {
-           
-            usersArray = new JSONArray();
+        // Get or create user data in userMap
+        JSONObject userObj = userMap.getOrDefault(user_id, new JSONObject());
+        if (!userMap.containsKey(user_id)) {
+            userObj.put("user_id", user_id);
+            userObj.put("transactions", new JSONArray());
+            userMap.put(user_id, userObj); 
         }
+
+
+        JSONArray transactions = (JSONArray) userObj.get("transactions");
+        transactions.add(transaction.toJsonObject());
 
         
-        boolean userExists = false;
-        for (Object obj : usersArray) {
-            JSONObject userObj = (JSONObject) obj;
-            if (userObj.get("user_id").equals(user_id)) {
-                
-                JSONArray transactions = (JSONArray) userObj.get("transactions");
-                transactions.add(transaction.toJsonObject());  
-                userExists = true;
-                break;
-            }
-        }
+        JSONArray usersArray = new JSONArray();
+        usersArray.addAll(userMap.values());
 
-        if (!userExists) {
-            
-            JSONObject newUser = new JSONObject();
-            newUser.put("user_id", user_id);
-
-            JSONArray transactions = new JSONArray();
-            transactions.add(transaction.toJsonObject());  
-            newUser.put("transactions", transactions);
-
-            usersArray.add(newUser);
-        }
-
-        
         try (FileWriter file = new FileWriter("transactions.json")) {
             file.write(usersArray.toJSONString());
             file.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
-}
+    }
 
     /**
      * Load and return a list of transactions for a given user.
@@ -190,7 +186,26 @@ public class ExpenseTracker {
      * @param user_id The user ID whose transactions are being requested.
      * @return A list of Transaction objects for the specified user.
      */
-   // public List<Transaction> loadTransactions(String user_id);
+    public List<Transaction> loadTransactions(String user_id) {
+        List<Transaction> transactionsList = new ArrayList<>();
+
+        // Get user data directly from the map
+        JSONObject userObj = userMap.get(user_id);
+        if (userObj != null) {
+            JSONArray userTransactions = (JSONArray) userObj.get("transactions");
+            for (Object transactionObj : userTransactions) {
+                JSONObject transactionJson = (JSONObject) transactionObj;
+                String date = (String) transactionJson.get("date");
+                double amount = (double) transactionJson.get("amount");
+                String category = (String) transactionJson.get("category");
+                String type = (String) transactionJson.get("type");
+
+                Transaction transaction = new Transaction(date, amount, category, type);
+                transactionsList.add(transaction);
+            }
+        }
+        return transactionsList;
+    }
 
 
     

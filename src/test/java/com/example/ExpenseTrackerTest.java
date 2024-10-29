@@ -2,6 +2,7 @@ package com.example;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -146,4 +147,64 @@ public class ExpenseTrackerTest {
         assertEquals("Groceries", savedTransaction.get("category"));
         assertEquals("Expense", savedTransaction.get("type"));
     }
+
+    @Test
+    public void testLoadTransactions_ExistingUser() {
+        
+        String userId = "user1";
+        Transaction transaction = new Transaction("2023-10-27", 100.00, "Groceries", "Expense");
+        expenseTracker.saveTransaction(userId, transaction);
+
+    
+        List<Transaction> transactions = expenseTracker.loadTransactions(userId);
+
+        
+        assertEquals(1, transactions.size(), "User should have one transaction");
+
+        Transaction loadedTransaction = transactions.get(0);
+        assertEquals("2023-10-27", loadedTransaction.getDate(), "Date should match saved transaction");
+        assertEquals(100.00, loadedTransaction.getAmount(), "Amount should match saved transaction");
+        assertEquals("Groceries", loadedTransaction.getCategory(), "Category should match saved transaction");
+        assertEquals("Expense", loadedTransaction.getType(), "Type should match saved transaction");
+    }
+
+    @Test
+    public void testLoadTransactions_NonExistentUser() {
+        // Act
+        List<Transaction> transactions = expenseTracker.loadTransactions("nonexistent_user");
+
+        // Assert
+        assertTrue(transactions.isEmpty(), "Non-existent user should return an empty list of transactions");
+    }
+
+    @Test
+    public void testLoadAllUsers() {
+       
+        String userId1 = "user1";
+        String userId2 = "user2";
+        Transaction transaction1 = new Transaction("2023-10-27", 100.00, "Groceries", "Expense");
+        Transaction transaction2 = new Transaction("2023-10-28", 200.00, "Rent", "Expense");
+        expenseTracker.saveTransaction(userId1, transaction1);
+        expenseTracker.saveTransaction(userId2, transaction2);
+
+
+        expenseTracker.loadAllUsers(); 
+
+      
+        assertEquals(2, expenseTracker.getUserMap().size(), "There should be two users loaded into the map");
+
+        JSONObject user1 = expenseTracker.getUserMap().get("user1");
+        assertNotNull(user1, "User1 should be present in the user map");
+        assertEquals("user1", user1.get("user_id"), "User1 ID should match");
+
+        JSONObject user2 = expenseTracker.getUserMap().get("user2");
+        assertNotNull(user2, "User2 should be present in the user map");
+        assertEquals("user2", user2.get("user_id"), "User2 ID should match");
+    }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+    Files.deleteIfExists(Path.of(testFilePath)); 
+}
+
 }
