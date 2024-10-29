@@ -195,8 +195,8 @@ public class ExpenseTracker {
             JSONArray userTransactions = (JSONArray) userObj.get("transactions");
             for (Object transactionObj : userTransactions) {
                 JSONObject transactionJson = (JSONObject) transactionObj;
-                String date = (String) transactionJson.get("date");
-                double amount = (double) transactionJson.get("amount");
+                LocalDate date = (LocalDate) transactionJson.get("date");
+                int amount = (int) transactionJson.get("amount");
                 String category = (String) transactionJson.get("category");
                 String type = (String) transactionJson.get("type");
 
