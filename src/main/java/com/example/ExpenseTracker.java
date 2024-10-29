@@ -131,20 +131,7 @@ public class ExpenseTracker {
     }
 
     // Initialize the map with data from JSON
-    public void loadAllUsers() {
-        JSONParser parser = new JSONParser();
-        try (FileReader reader = new FileReader("transactions.json")) {
-            JSONArray usersArray = (JSONArray) parser.parse(reader);
-
-            for (Object obj : usersArray) {
-                JSONObject userObj = (JSONObject) obj;
-                String userId = (String) userObj.get("user_id");
-                userMap.put(userId, userObj);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+  
 
         /**
      * Save the user's transaction to a JSON file.
@@ -196,7 +183,7 @@ public class ExpenseTracker {
             for (Object transactionObj : userTransactions) {
                 JSONObject transactionJson = (JSONObject) transactionObj;
                 LocalDate date = (LocalDate) transactionJson.get("date");
-                int amount = (int) transactionJson.get("amount");
+                double amount = (double) transactionJson.get("amount");
                 String category = (String) transactionJson.get("category");
                 String type = (String) transactionJson.get("type");
 
@@ -205,6 +192,27 @@ public class ExpenseTracker {
             }
         }
         return transactionsList;
+    }
+
+    public Map<String, JSONObject> getUserMap(){
+        return userMap;
+    }
+
+    public JSONArray parseJsonFile(String filePath) {
+        JSONParser parser = new JSONParser();
+        try (FileReader reader = new FileReader(filePath)) {
+            Object obj = parser.parse(reader);
+    
+            // Check if the parsed object is a JSONArray
+            if (obj instanceof JSONArray) {
+                return (JSONArray) obj;
+            } else {
+                throw new IllegalArgumentException("The JSON file does not contain an array at the root.");
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

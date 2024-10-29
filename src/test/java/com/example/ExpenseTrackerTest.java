@@ -1,11 +1,21 @@
 package com.example;
 import org.json.simple.JSONObject;
+import java.io.*;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +29,11 @@ public class ExpenseTrackerTest {
     @BeforeEach
     public void setUp() {
         tracker = new ExpenseTracker();
-        expenseTracker = new ExpenseTracker(testFilePath);
+        expenseTracker = new ExpenseTracker();
+        Path path = Paths.get(testFilePath);
+        if (!Files.exists(path)) {
+        Files.write(path, "[]".getBytes(), StandardOpenOption.CREATE);
+    }
     }
 
     @Test
@@ -128,13 +142,15 @@ public class ExpenseTrackerTest {
     public void testSaveTransaction_NewUser() {
         // Arrange
         String userId = "user1";
-        Transaction transaction = new Transaction("2023-10-27", 100.00, "Groceries", "Expense");
+        LocalDate date = LocalDate.parse("2023-10-27");
+        
+        Transaction transaction = new Transaction(date, 100.00, "Groceries", "Expense");
 
         // Act
         expenseTracker.saveTransaction(userId, transaction);
 
         // Assert
-        JSONArray usersArray = parseJsonFile(testFilePath);
+        JSONArray usersArray = parseJsonFile(testfilePath);
         assertEquals(1, usersArray.size(), "Only one user should exist in the file");
 
         JSONObject user = (JSONObject) usersArray.get(0);
@@ -154,7 +170,8 @@ public class ExpenseTrackerTest {
     public void testLoadTransactions_ExistingUser() {
         
         String userId = "user1";
-        Transaction transaction = new Transaction("2023-10-27", 100.00, "Groceries", "Expense");
+        LocalDate date = LocalDate.parse("2023-10-27");
+        Transaction transaction = new Transaction(date, 100.00, "Groceries", "Expense");
         expenseTracker.saveTransaction(userId, transaction);
 
     
@@ -184,8 +201,10 @@ public class ExpenseTrackerTest {
        
         String userId1 = "user1";
         String userId2 = "user2";
-        Transaction transaction1 = new Transaction("2023-10-27", 100.00, "Groceries", "Expense");
-        Transaction transaction2 = new Transaction("2023-10-28", 200.00, "Rent", "Expense");
+        LocalDate date1 = LocalDate.parse("2023-10-27");
+        LocalDate date = LocalDate.parse("2023-10-28");
+        Transaction transaction1 = new Transaction(date1, 100.00, "Groceries", "Expense");
+        Transaction transaction2 = new Transaction(date, 200.00, "Rent", "Expense");
         expenseTracker.saveTransaction(userId1, transaction1);
         expenseTracker.saveTransaction(userId2, transaction2);
 

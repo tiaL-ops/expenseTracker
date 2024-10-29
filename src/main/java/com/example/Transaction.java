@@ -4,11 +4,11 @@ import org.json.simple.JSONObject;
 import java.time.LocalDate;
 public class Transaction {
     private LocalDate date;
-    private int amount;
+    private double amount;
     private String category;
     private String type;
 
-    public Transaction(LocalDate date, int amount, String category, String type) {
+    public Transaction(LocalDate date, double amount, String category, String type) {
         this.date = date;
         this.amount = amount;
         this.category = category;
@@ -17,7 +17,7 @@ public class Transaction {
 
     // Getters
     public LocalDate getDate() { return date; }
-    public int getAmount() { return amount; }
+    public double getAmount() { return amount; }
     public String getCategory() { return category; }
     public String getType() { return type; }
 
