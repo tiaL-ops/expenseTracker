@@ -23,23 +23,19 @@ import java.util.List;
 public class ExpenseTrackerTest {
   
     private ExpenseTracker tracker;
-    private String testFilePath = "test_transactions.json";
+    private String testFileName = "test_transactions.json";
     private ExpenseTracker expenseTracker;
 
     @BeforeEach
-    public void setUp() {
-        tracker = new ExpenseTracker();
+    public void setUp() throws IOException {
+        tracker = new ExpenseTracker(); 
         expenseTracker = new ExpenseTracker();
-        Path path = Paths.get(testFilePath);
-        if (!Files.exists(path)) {
-    
-    try {
-        Files.write(path, "[]".getBytes(), StandardOpenOption.CREATE);
-    } catch (Exception e) {
-        System.err.println("Well it's not there");
+        
+        Path path = Path.of(testFileName);
+
+        
+        Files.write(path, "[]".getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
-    }
-}
 
     @Test
     public void testAddIncome() {
@@ -146,52 +142,49 @@ public class ExpenseTrackerTest {
 
     @Test
     public void testSaveTransaction_NewUser() {
-        // Arrange
+        // Arrange: create user and transaction
         String userId = "user1";
         LocalDate date = LocalDate.parse("2023-10-27");
-        
-        Transaction transaction = new Transaction(date, 100.00, "Groceries", "Expense");
+        Transaction transaction = new Transaction(date, 100.0, "Groceries", "Expense");
 
-        // Act
+        // Act: save the transaction
         expenseTracker.saveTransaction(userId, transaction);
 
-        // Assert
-        JSONArray usersArray = expenseTracker.parseJsonFile(testFilePath);
-        assertEquals(1, usersArray.size(), "Only one user should exist in the file");
+        // Assert: verify data was saved correctly
+        JSONArray usersArray = expenseTracker.parseJsonFile(testFileName);
+        assertNotNull(usersArray, "Users array should not be null after parsing file.");
+        assertEquals(1, usersArray.size(), "Only one user should exist in the file.");
 
         JSONObject user = (JSONObject) usersArray.get(0);
-        assertEquals(userId, user.get("user_id"), "User ID should match");
+        assertEquals(userId, user.get("user_id"), "User ID should match.");
 
         JSONArray transactions = (JSONArray) user.get("transactions");
-        assertEquals(1, transactions.size(), "User should have one transaction");
+        assertEquals(1, transactions.size(), "User should have one transaction.");
 
         JSONObject savedTransaction = (JSONObject) transactions.get(0);
         assertEquals("2023-10-27", savedTransaction.get("date"));
-        assertEquals(100.00, savedTransaction.get("amount"));
+        assertEquals(100.0, ((Number) savedTransaction.get("amount")).doubleValue(), "Amount should match saved transaction.");
         assertEquals("Groceries", savedTransaction.get("category"));
         assertEquals("Expense", savedTransaction.get("type"));
     }
-
     @Test
     public void testLoadTransactions_ExistingUser() {
-        
-        String userId = "user1";
-        LocalDate date = LocalDate.parse("2023-10-27");
-        Transaction transaction = new Transaction(date, 100.00, "Groceries", "Expense");
-        expenseTracker.saveTransaction(userId, transaction);
+    String userId = "user1";
+    LocalDate date = LocalDate.parse("2023-10-27");
+    Transaction transaction = new Transaction(date, 100.00, "Groceries", "Expense");
+    expenseTracker.saveTransaction(userId, transaction);
 
-    
-        List<Transaction> transactions = expenseTracker.loadTransactions(userId);
+    List<Transaction> transactions = expenseTracker.loadTransactions(userId);
 
-        
-        assertEquals(1, transactions.size(), "User should have one transaction");
+    assertEquals(1, transactions.size(), "User should have one transaction");
 
-        Transaction loadedTransaction = transactions.get(0);
-        assertEquals("2023-10-27", loadedTransaction.getDate(), "Date should match saved transaction");
-        assertEquals(100.00, loadedTransaction.getAmount(), "Amount should match saved transaction");
-        assertEquals("Groceries", loadedTransaction.getCategory(), "Category should match saved transaction");
-        assertEquals("Expense", loadedTransaction.getType(), "Type should match saved transaction");
-    }
+    Transaction loadedTransaction = transactions.get(0);
+    assertEquals("2023-10-27", loadedTransaction.getDate().toString(), "Date should match saved transaction"); // Convert LocalDate to String
+    assertEquals(100.00, loadedTransaction.getAmount(), "Amount should match saved transaction");
+    assertEquals("Groceries", loadedTransaction.getCategory(), "Category should match saved transaction");
+    assertEquals("Expense", loadedTransaction.getType(), "Type should match saved transaction");
+}
+
 
     @Test
     public void testLoadTransactions_NonExistentUser() {
@@ -228,10 +221,29 @@ public class ExpenseTrackerTest {
         assertNotNull(user2, "User2 should be present in the user map");
         assertEquals("user2", user2.get("user_id"), "User2 ID should match");
     }
+    @Test
+    public void testParseJsonFile_ValidArray() throws Exception {
+        
+        String testFilePath = "testArray.json";
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("key", "value");
+        jsonArray.add(jsonObject);
 
+        try (FileWriter file = new FileWriter(testFilePath)) {
+            file.write(jsonArray.toJSONString());
+        }
+
+        
+        JSONArray result = expenseTracker.parseJsonFile(testFilePath);
+
+        assertNotNull(result, "The result should not be null for a valid JSON array file.");
+        assertEquals(jsonArray, result, "The parsed JSON array should match the expected content.");
+    }
     @AfterEach
     public void tearDown() throws IOException {
-    Files.deleteIfExists(Path.of(testFilePath)); 
-}
+      
+        Files.deleteIfExists(Path.of(testFileName));
+    }
 
 }

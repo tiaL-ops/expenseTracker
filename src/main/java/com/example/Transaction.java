@@ -32,7 +32,7 @@ public class Transaction {
      */
     public JSONObject toJsonObject() {
         JSONObject obj = new JSONObject();
-        obj.put("date", this.date);
+        obj.put("date", this.date.toString());
         obj.put("amount", this.amount);
         obj.put("category", this.category);
         obj.put("type", this.type);

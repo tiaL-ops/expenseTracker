@@ -15,10 +15,47 @@ import java.io.IOException;
 public class ExpenseTracker {
 
     private List<Transaction> transactions;
-    private Map<String, JSONObject> userMap = new HashMap<>();
+    private Map<String, JSONObject> userMap;
+    private String filePath;
 
-    public ExpenseTracker(){
-        transactions = new ArrayList<>();
+    public ExpenseTracker() {
+        this.transactions = new ArrayList<>();
+        this.userMap = new HashMap<>();
+        this.filePath = "transactions.json";
+        
+    }
+
+    public ExpenseTracker(String jsonFilePath) {
+        this.transactions = new ArrayList<>();
+        this.userMap = new HashMap<>();
+        this.filePath = jsonFilePath;
+        loadFromJson(jsonFilePath);
+    }
+
+
+    private void loadFromJson(String filePath) {
+        JSONArray usersArray = parseJsonFile(filePath);
+
+        if (usersArray != null) {
+            for (Object obj : usersArray) {
+                JSONObject userObj = (JSONObject) obj;
+                String userId = (String) userObj.get("user_id");
+                userMap.put(userId, userObj);
+
+                JSONArray userTransactions = (JSONArray) userObj.get("transactions");
+                for (Object txnObj : userTransactions) {
+                    JSONObject txnJson = (JSONObject) txnObj;
+                    LocalDate date = LocalDate.parse((String) txnJson.get("date"));
+                    int amount = ((Long) txnJson.get("amount")).intValue();
+                    String category = (String) txnJson.get("category");
+                    String type = (String) txnJson.get("type");
+
+                    Transaction transaction = new Transaction(date, amount, category, type);
+                    transactions.add(transaction);
+                }
+            }
+        }
+
     }
 
     public void addIncome(LocalDate date, int amount, String category){
@@ -145,7 +182,7 @@ public class ExpenseTracker {
 
     }
 
-    // Initialize the map with data from JSON
+    
   
 
         /**
@@ -156,30 +193,43 @@ public class ExpenseTracker {
      * @param user_id The user ID to associate with the transaction.
      * @param transaction The transaction to be saved (e.g., date, amount, category, type).
      */
-    public void saveTransaction(String user_id, Transaction transaction) {
-        // Get or create user data in userMap
-        JSONObject userObj = userMap.getOrDefault(user_id, new JSONObject());
-        if (!userMap.containsKey(user_id)) {
-            userObj.put("user_id", user_id);
+
+     public void saveTransaction(String userId, Transaction transaction) {
+        
+        JSONObject userObj = userMap.getOrDefault(userId, new JSONObject());
+        if (!userMap.containsKey(userId)) {
+            userObj.put("user_id", userId);
             userObj.put("transactions", new JSONArray());
-            userMap.put(user_id, userObj); 
+            userMap.put(userId, userObj); 
         }
-
-
-        JSONArray transactions = (JSONArray) userObj.get("transactions");
-        transactions.add(transaction.toJsonObject());
-
+    
+       
+        JSONArray userTransactions = (JSONArray) userObj.get("transactions");
+        userTransactions.add(transaction.toJsonObject()); 
+    
+       
+        userObj.put("transactions", userTransactions);
+        userMap.put(userId, userObj);
+    
         
         JSONArray usersArray = new JSONArray();
         usersArray.addAll(userMap.values());
-
-        try (FileWriter file = new FileWriter("transactions.json")) {
+    
+       
+        System.out.println("Data to be saved for userId " + userId + ": " + usersArray.toJSONString());
+    
+        
+        try (FileWriter file = new FileWriter(filePath)) {
             file.write(usersArray.toJSONString());
             file.flush();
+            System.out.println("User data saved successfully.");
         } catch (IOException e) {
+            System.err.println("Error saving transaction to file: " + e.getMessage());
             e.printStackTrace();
         }
     }
+    
+    
 
     /**
      * Load and return a list of transactions for a given user.
