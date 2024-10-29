@@ -34,6 +34,21 @@ public class ExpenseTracker {
     public List<Transaction> getTransactions() {
         return transactions;
     }
+    // Initialize the map with data from JSON
+    public void loadAllUsers() {
+        JSONParser parser = new JSONParser();
+        try (FileReader reader = new FileReader("transactions.json")) {
+            JSONArray usersArray = (JSONArray) parser.parse(reader);
+
+            for (Object obj : usersArray) {
+                JSONObject userObj = (JSONObject) obj;
+                String userId = (String) userObj.get("user_id");
+                userMap.put(userId, userObj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Filters transactions by category and returns the list of matching transactions.
@@ -203,7 +218,7 @@ public class ExpenseTracker {
         try (FileReader reader = new FileReader(filePath)) {
             Object obj = parser.parse(reader);
     
-            // Check if the parsed object is a JSONArray
+       
             if (obj instanceof JSONArray) {
                 return (JSONArray) obj;
             } else {

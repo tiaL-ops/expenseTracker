@@ -32,9 +32,14 @@ public class ExpenseTrackerTest {
         expenseTracker = new ExpenseTracker();
         Path path = Paths.get(testFilePath);
         if (!Files.exists(path)) {
+    
+    try {
         Files.write(path, "[]".getBytes(), StandardOpenOption.CREATE);
+    } catch (Exception e) {
+        System.err.println("Well it's not there");
     }
     }
+}
 
     @Test
     public void testAddIncome() {
@@ -136,6 +141,7 @@ public class ExpenseTrackerTest {
         assertTrue(report.contains("Total Expenses: " + expectedTotalExpenses), "Expenses mismatch in report");
         assertTrue(report.contains("Net Balance: " + expectedNetBalance), "Net Balance mismatch in report");
     }
+   
 
 
     @Test
@@ -150,7 +156,7 @@ public class ExpenseTrackerTest {
         expenseTracker.saveTransaction(userId, transaction);
 
         // Assert
-        JSONArray usersArray = parseJsonFile(testfilePath);
+        JSONArray usersArray = expenseTracker.parseJsonFile(testFilePath);
         assertEquals(1, usersArray.size(), "Only one user should exist in the file");
 
         JSONObject user = (JSONObject) usersArray.get(0);

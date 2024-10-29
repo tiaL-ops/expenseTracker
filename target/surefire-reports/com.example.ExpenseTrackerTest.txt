@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.example.ExpenseTrackerTest
+-------------------------------------------------------------------------------
+Tests run: 10, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.048 s <<< FAILURE! - in com.example.ExpenseTrackerTest
+testSaveTransaction_NewUser  Time elapsed: 0.011 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Only one user should exist in the file ==> expected: <1> but was: <0>
+	at com.example.ExpenseTrackerTest.testSaveTransaction_NewUser(ExpenseTrackerTest.java:160)
+
+testLoadTransactions_ExistingUser  Time elapsed: 0.001 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Date should match saved transaction ==> expected: java.lang.String@35047d03<2023-10-27> but was: java.time.LocalDate@49b0b76<2023-10-27>
+	at com.example.ExpenseTrackerTest.testLoadTransactions_ExistingUser(ExpenseTrackerTest.java:190)
+
