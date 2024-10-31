@@ -1,4 +1,6 @@
 com/example/Transaction.class
 com/example/ExpenseTrackerApp.class
 com/example/App.class
+com/example/ExpenseController$DefaultController.class
+com/example/ExpenseController.class
 com/example/ExpenseTracker.class
