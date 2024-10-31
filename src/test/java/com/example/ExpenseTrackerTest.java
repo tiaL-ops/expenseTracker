@@ -29,7 +29,7 @@ public class ExpenseTrackerTest {
     @BeforeEach
     public void setUp() throws IOException {
         tracker = new ExpenseTracker(); 
-        expenseTracker = new ExpenseTracker();
+        expenseTracker = new ExpenseTracker(testFileName);
         
         Path path = Path.of(testFileName);
 

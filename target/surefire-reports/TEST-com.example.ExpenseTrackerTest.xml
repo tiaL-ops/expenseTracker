@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.example.ExpenseTrackerTest" time="0.047" tests="11" errors="1" skipped="0" failures="1">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.example.ExpenseTrackerTest" time="0.1" tests="11" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="23"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk/23.0.1/libexec/openjdk.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/landy/Desktop/selfProject/expenseTracker/target/surefire/surefirebooter329038891595182599.jar /Users/landy/Desktop/selfProject/expenseTracker/target/surefire 2024-10-29T19-54-04_944-jvmRun1 surefire10218313433556054642tmp surefire_016121498098162379477tmp"/>
+    <property name="sun.java.command" value="/Users/landy/Desktop/selfProject/expenseTracker/target/surefire/surefirebooter12785995839840894309.jar /Users/landy/Desktop/selfProject/expenseTracker/target/surefire 2024-10-30T21-06-24_570-jvmRun1 surefire7814804751177133779tmp surefire_016756284735806137484tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/Users/landy/Desktop/selfProject/expenseTracker/target/test-classes:/Users/landy/Desktop/selfProject/expenseTracker/target/classes:/Users/landy/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/landy/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/landy/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.3/junit-jupiter-engine-5.9.3.jar:/Users/landy/.m2/repository/org/junit/platform/junit-platform-engine/1.9.3/junit-platform-engine-1.9.3.jar:/Users/landy/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/Users/landy/.m2/repository/org/junit/platform/junit-platform-commons/1.9.3/junit-platform-commons-1.9.3.jar:/Users/landy/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.3/junit-jupiter-api-5.9.3.jar:/Users/landy/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/landy/.m2/repository/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar:"/>
@@ -29,7 +29,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="apple.awt.application.name" value="ForkedBooter"/>
-    <property name="surefire.real.class.path" value="/Users/landy/Desktop/selfProject/expenseTracker/target/surefire/surefirebooter329038891595182599.jar"/>
+    <property name="surefire.real.class.path" value="/Users/landy/Desktop/selfProject/expenseTracker/target/surefire/surefirebooter12785995839840894309.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="23.0.1"/>
@@ -58,29 +58,15 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="67.0"/>
   </properties>
-  <testcase name="testFilterTransactionsByCategory" classname="com.example.ExpenseTrackerTest" time="0.016"/>
-  <testcase name="testSaveTransaction_NewUser" classname="com.example.ExpenseTrackerTest" time="0.013">
-    <failure message="Only one user should exist in the file. ==&gt; expected: &lt;1&gt; but was: &lt;0&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: Only one user should exist in the file. ==> expected: <1> but was: <0>
-	at com.example.ExpenseTrackerTest.testSaveTransaction_NewUser(ExpenseTrackerTest.java:156)
-]]></failure>
-    <system-out><![CDATA[Data to be saved for userId user1: [{"user_id":"user1","transactions":[{"date":"2023-10-27","amount":100.0,"category":"Groceries","type":"Expense"}]}]
-User data saved successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testLoadTransactions_ExistingUser" classname="com.example.ExpenseTrackerTest" time="0.002">
-    <error message="class java.lang.String cannot be cast to class java.time.LocalDate (java.lang.String and java.time.LocalDate are in module java.base of loader &apos;bootstrap&apos;)" type="java.lang.ClassCastException">java.lang.ClassCastException: class java.lang.String cannot be cast to class java.time.LocalDate (java.lang.String and java.time.LocalDate are in module java.base of loader 'bootstrap')
-	at com.example.ExpenseTrackerTest.testLoadTransactions_ExistingUser(ExpenseTrackerTest.java:177)
-</error>
-    <system-out><![CDATA[Data to be saved for userId user1: [{"user_id":"user1","transactions":[{"date":"2023-10-27","amount":100.0,"category":"Groceries","type":"Expense"}]}]
-User data saved successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testLoadAllUsers" classname="com.example.ExpenseTrackerTest" time="0.001"/>
-  <testcase name="testAddExpense" classname="com.example.ExpenseTrackerTest" time="0"/>
-  <testcase name="testShowTotalByCategory" classname="com.example.ExpenseTrackerTest" time="0"/>
-  <testcase name="testGenerateMonthlyReport" classname="com.example.ExpenseTrackerTest" time="0.002"/>
-  <testcase name="testDisplayAllTransactions" classname="com.example.ExpenseTrackerTest" time="0"/>
-  <testcase name="testAddIncome" classname="com.example.ExpenseTrackerTest" time="0"/>
-  <testcase name="testLoadTransactions_NonExistentUser" classname="com.example.ExpenseTrackerTest" time="0.001"/>
+  <testcase name="testFilterTransactionsByCategory" classname="com.example.ExpenseTrackerTest" time="0.023"/>
+  <testcase name="testSaveTransaction_NewUser" classname="com.example.ExpenseTrackerTest" time="0.009"/>
+  <testcase name="testLoadTransactions_ExistingUser" classname="com.example.ExpenseTrackerTest" time="0.003"/>
+  <testcase name="testLoadAllUsers" classname="com.example.ExpenseTrackerTest" time="0.005"/>
+  <testcase name="testAddExpense" classname="com.example.ExpenseTrackerTest" time="0.004"/>
+  <testcase name="testShowTotalByCategory" classname="com.example.ExpenseTrackerTest" time="0.023"/>
+  <testcase name="testGenerateMonthlyReport" classname="com.example.ExpenseTrackerTest" time="0.009"/>
+  <testcase name="testDisplayAllTransactions" classname="com.example.ExpenseTrackerTest" time="0.001"/>
+  <testcase name="testAddIncome" classname="com.example.ExpenseTrackerTest" time="0.001"/>
+  <testcase name="testLoadTransactions_NonExistentUser" classname="com.example.ExpenseTrackerTest" time="0.009"/>
   <testcase name="testParseJsonFile_ValidArray" classname="com.example.ExpenseTrackerTest" time="0.001"/>
 </testsuite>

@@ -194,40 +194,51 @@ public class ExpenseTracker {
      * @param transaction The transaction to be saved (e.g., date, amount, category, type).
      */
 
-     public void saveTransaction(String userId, Transaction transaction) {
-        
-        JSONObject userObj = userMap.getOrDefault(userId, new JSONObject());
-        if (!userMap.containsKey(userId)) {
-            userObj.put("user_id", userId);
-            userObj.put("transactions", new JSONArray());
-            userMap.put(userId, userObj); 
-        }
+   public void saveTransaction(String userId, Transaction transaction) {
+    JSONObject userObj = userMap.getOrDefault(userId, new JSONObject());
     
-       
-        JSONArray userTransactions = (JSONArray) userObj.get("transactions");
-        userTransactions.add(transaction.toJsonObject()); 
-    
-       
-        userObj.put("transactions", userTransactions);
+    // Initialize user object if it doesn't exist
+    if (!userMap.containsKey(userId)) {
+        userObj.put("user_id", userId);
+        userObj.put("transactions", new JSONArray());
         userMap.put(userId, userObj);
-    
-        
-        JSONArray usersArray = new JSONArray();
-        usersArray.addAll(userMap.values());
-    
-       
-        System.out.println("Data to be saved for userId " + userId + ": " + usersArray.toJSONString());
-    
-        
-        try (FileWriter file = new FileWriter(filePath)) {
-            file.write(usersArray.toJSONString());
-            file.flush();
-            System.out.println("User data saved successfully.");
-        } catch (IOException e) {
-            System.err.println("Error saving transaction to file: " + e.getMessage());
-            e.printStackTrace();
-        }
     }
+
+    // Retrieve or initialize the transactions array
+    JSONArray userTransactions = (JSONArray) userObj.get("transactions");
+    if (userTransactions == null) {
+        userTransactions = new JSONArray();
+        userObj.put("transactions", userTransactions);
+    }
+
+    // Convert Transaction to JSON and add to transactions array
+    if (transaction != null && transaction.toJsonObject() != null) {
+        userTransactions.add(transaction.toJsonObject());
+    } else {
+        System.err.println("Transaction or transaction JSON conversion failed for user: " + userId);
+    }
+
+    // Update userMap with modified user object
+    userMap.put(userId, userObj);
+
+    // Prepare JSON array for saving
+    JSONArray usersArray = new JSONArray();
+    usersArray.addAll(userMap.values());
+
+    // Debugging output to verify contents before saving
+    System.out.println("Data to be saved for userId " + userId + ": " + usersArray.toJSONString());
+
+    // Save to JSON file
+    try (FileWriter file = new FileWriter(filePath)) {
+        file.write(usersArray.toJSONString());
+        file.flush();
+        System.out.println("User data saved successfully.");
+    } catch (IOException e) {
+        System.err.println("Error saving transaction to file: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+
     
     
 
@@ -247,7 +258,7 @@ public class ExpenseTracker {
             JSONArray userTransactions = (JSONArray) userObj.get("transactions");
             for (Object transactionObj : userTransactions) {
                 JSONObject transactionJson = (JSONObject) transactionObj;
-                LocalDate date = (LocalDate) transactionJson.get("date");
+                LocalDate date = LocalDate.parse((String) transactionJson.get("date"));
                 double amount = (double) transactionJson.get("amount");
                 String category = (String) transactionJson.get("category");
                 String type = (String) transactionJson.get("type");

@@ -1,12 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.ExpenseTrackerTest
 -------------------------------------------------------------------------------
-Tests run: 11, Failures: 1, Errors: 1, Skipped: 0, Time elapsed: 0.047 s <<< FAILURE! - in com.example.ExpenseTrackerTest
-testSaveTransaction_NewUser  Time elapsed: 0.013 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: Only one user should exist in the file. ==> expected: <1> but was: <0>
-	at com.example.ExpenseTrackerTest.testSaveTransaction_NewUser(ExpenseTrackerTest.java:156)
-
-testLoadTransactions_ExistingUser  Time elapsed: 0.002 s  <<< ERROR!
-java.lang.ClassCastException: class java.lang.String cannot be cast to class java.time.LocalDate (java.lang.String and java.time.LocalDate are in module java.base of loader 'bootstrap')
-	at com.example.ExpenseTrackerTest.testLoadTransactions_ExistingUser(ExpenseTrackerTest.java:177)
-
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.1 s - in com.example.ExpenseTrackerTest
