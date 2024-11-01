@@ -3,12 +3,12 @@
     "version": "1.0.0",
     "private": true,
     "dependencies": {
-      "concurrently": "^9.0.1"
+        "concurrently": "^9.0.1",
+        "http-proxy-middleware": "^3.0.3"
     },
     "scripts": {
-      "start": "concurrently \"npm run start-frontend\" \"mvn -f ./pom.xml spring-boot:run\"",
-      "start-frontend": "npm start --prefix frontend",
-      "build-frontend": "npm run build --prefix frontend"
+        "start": "concurrently \"npm run start-frontend\" \"mvn -f ./pom.xml spring-boot:run\"",
+        "start-frontend": "npm start --prefix frontend",
+        "build-frontend": "npm run build --prefix frontend"
     }
-  }
-  
+}
