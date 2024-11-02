@@ -1,83 +1,69 @@
 package com.example;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import java.io.*;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-
+import java.time.LocalDate;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.time.LocalDate;
-import java.util.List;
-
 public class ExpenseTrackerTest {
-  
+
     private ExpenseTracker tracker;
     private String testFileName = "test_transactions.json";
     private ExpenseTracker expenseTracker;
 
     @BeforeEach
     public void setUp() throws IOException {
-        tracker = new ExpenseTracker(); 
+        tracker = new ExpenseTracker();
         expenseTracker = new ExpenseTracker(testFileName);
-        
         Path path = Path.of(testFileName);
-
-        
         Files.write(path, "[]".getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     @Test
     public void testAddIncome() {
-        tracker.addIncome(LocalDate.of(2023, 10, 5), 1000, "Salary");
+        String userId = "user1";
+        tracker.addIncome(userId, LocalDate.of(2023, 10, 5), 1000, "Salary");
 
-        // Verify transaction count
         assertEquals(1, tracker.getTransactions().size(), "Transaction count should be 1 after adding income.");
-
-        
         Transaction transaction = tracker.getTransactions().get(0);
         assertEquals("income", transaction.getType(), "Transaction type should be 'income'.");
         assertEquals(1000, transaction.getAmount(), "Transaction amount should be 1000.");
         assertEquals("Salary", transaction.getCategory(), "Transaction category should be 'Salary'.");
         assertEquals(LocalDate.of(2023, 10, 5), transaction.getDate(), "Transaction date should match the input date.");
+        assertEquals(userId, transaction.getUserId(), "User ID should match the input userId.");
     }
 
     @Test
     public void testAddExpense() {
-        tracker.addExpense(LocalDate.of(2023, 10, 6), 200, "Groceries");
-
+        String userId = "user2";
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 6), 200, "Groceries");
 
         assertEquals(1, tracker.getTransactions().size(), "Transaction count should be 1 after adding expense.");
-
-      
         Transaction transaction = tracker.getTransactions().get(0);
         assertEquals("expense", transaction.getType(), "Transaction type should be 'expense'.");
         assertEquals(200, transaction.getAmount(), "Transaction amount should be 200.");
         assertEquals("Groceries", transaction.getCategory(), "Transaction category should be 'Groceries'.");
         assertEquals(LocalDate.of(2023, 10, 6), transaction.getDate(), "Transaction date should match the input date.");
+        assertEquals(userId, transaction.getUserId(), "User ID should match the input userId.");
     }
 
     @Test
     public void testFilterTransactionsByCategory() {
-        // Add transactions in different categories
-        tracker.addExpense(LocalDate.of(2023, 10, 5), 50, "Groceries");
-        tracker.addExpense(LocalDate.of(2023, 10, 6), 20, "Groceries");
-        tracker.addExpense(LocalDate.of(2023, 10, 7), 30, "Utilities");
+        String userId = "user1";
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 5), 50, "Groceries");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 6), 20, "Groceries");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 7), 30, "Utilities");
 
-        
         List<Transaction> filteredTransactions = tracker.filterTransactionsByCategory("Groceries");
 
-    
         assertEquals(2, filteredTransactions.size(), "Filtered transactions should include only 'Groceries' category transactions.");
         for (Transaction t : filteredTransactions) {
             assertEquals("Groceries", t.getCategory(), "Each transaction should be in the 'Groceries' category.");
@@ -86,32 +72,27 @@ public class ExpenseTrackerTest {
 
     @Test
     public void testShowTotalByCategory() {
-        // Add multiple transactions
-        tracker.addExpense(LocalDate.of(2023, 10, 5), 50, "Groceries");
-        tracker.addExpense(LocalDate.of(2023, 10, 6), 20, "Groceries");
-        tracker.addExpense(LocalDate.of(2023, 10, 7), 30, "Groceries");
-        tracker.addExpense(LocalDate.of(2023, 10, 7), 100, "Rent");
+        String userId = "user1";
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 5), 50, "Groceries");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 6), 20, "Groceries");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 7), 30, "Groceries");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 7), 100, "Rent");
 
-       
-        int totalGroceries = tracker.showTotalByCategory("Groceries");
+        double totalGroceries = tracker.showTotalByCategory("Groceries");
         assertEquals(100, totalGroceries, "Total for 'Groceries' should be the sum of all grocery expenses.");
 
-        
-        int totalEntertainment = tracker.showTotalByCategory("Entertainment");
+        double totalEntertainment = tracker.showTotalByCategory("Entertainment");
         assertEquals(0, totalEntertainment, "Total for 'Entertainment' should be 0 since no transactions exist for this category.");
     }
 
     @Test
     public void testDisplayAllTransactions() {
-        // Add multiple transactions
-        tracker.addIncome(LocalDate.of(2023, 10, 1), 1500, "Salary");
-        tracker.addExpense(LocalDate.of(2023, 10, 2), 300, "Rent");
-        tracker.addExpense(LocalDate.of(2023, 10, 3), 50, "Utilities");
+        String userId = "user1";
+        tracker.addIncome(userId, LocalDate.of(2023, 10, 1), 1500, "Salary");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 2), 300, "Rent");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 3), 50, "Utilities");
 
-      
         String allTransactions = tracker.displayAllTransactions();
-
-        
         assertTrue(allTransactions.contains("Salary"), "All transactions should include 'Salary' category.");
         assertTrue(allTransactions.contains("Rent"), "All transactions should include 'Rent' category.");
         assertTrue(allTransactions.contains("Utilities"), "All transactions should include 'Utilities' category.");
@@ -119,38 +100,31 @@ public class ExpenseTrackerTest {
 
     @Test
     public void testGenerateMonthlyReport() {
-        // Add example transactions for October 2023
-        tracker.addIncome(LocalDate.of(2023, 10, 1), 1500, "Salary");
-        tracker.addExpense(LocalDate.of(2023, 10, 2), 300, "Rent");
-        tracker.addExpense(LocalDate.of(2023, 10, 3), 100, "Groceries");
-        tracker.addExpense(LocalDate.of(2023, 10, 15), 150, "Utilities");
+        String userId = "user1";
+        tracker.addIncome(userId, LocalDate.of(2023, 10, 1), 1500, "Salary");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 2), 300, "Rent");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 3), 100, "Groceries");
+        tracker.addExpense(userId, LocalDate.of(2023, 10, 15), 150, "Utilities");
 
- 
-        int expectedTotalIncome = 1500;
-        int expectedTotalExpenses = 300 + 100 + 150;
-        int expectedNetBalance = expectedTotalIncome - expectedTotalExpenses;
+        double expectedTotalIncome = 1500;
+        double expectedTotalExpenses = 300 + 100 + 150;
+        double expectedNetBalance = expectedTotalIncome - expectedTotalExpenses;
 
-    
         String report = tracker.generateMonthlyReport(10, 2023);
 
         assertTrue(report.contains("Total Income: " + expectedTotalIncome), "Income mismatch in report");
         assertTrue(report.contains("Total Expenses: " + expectedTotalExpenses), "Expenses mismatch in report");
         assertTrue(report.contains("Net Balance: " + expectedNetBalance), "Net Balance mismatch in report");
     }
-   
-
 
     @Test
     public void testSaveTransaction_NewUser() {
-        // Arrange: create user and transaction
         String userId = "user1";
         LocalDate date = LocalDate.parse("2023-10-27");
-        Transaction transaction = new Transaction(date, 100.0, "Groceries", "Expense");
+        Transaction transaction = new Transaction(date, 100.0, "Groceries", "Expense", userId);
 
-        // Act: save the transaction
         expenseTracker.saveTransaction(userId, transaction);
 
-        // Assert: verify data was saved correctly
         JSONArray usersArray = expenseTracker.parseJsonFile(testFileName);
         assertNotNull(usersArray, "Users array should not be null after parsing file.");
         assertEquals(1, usersArray.size(), "Only one user should exist in the file.");
@@ -167,50 +141,45 @@ public class ExpenseTrackerTest {
         assertEquals("Groceries", savedTransaction.get("category"));
         assertEquals("Expense", savedTransaction.get("type"));
     }
+
     @Test
     public void testLoadTransactions_ExistingUser() {
-    String userId = "user1";
-    LocalDate date = LocalDate.parse("2023-10-27");
-    Transaction transaction = new Transaction(date, 100.00, "Groceries", "Expense");
-    expenseTracker.saveTransaction(userId, transaction);
+        String userId = "user1";
+        LocalDate date = LocalDate.parse("2023-10-27");
+        Transaction transaction = new Transaction(date, 100.00, "Groceries", "Expense", userId);
+        expenseTracker.saveTransaction(userId, transaction);
 
-    List<Transaction> transactions = expenseTracker.loadTransactions(userId);
+        List<Transaction> transactions = expenseTracker.loadTransactions(userId);
 
-    assertEquals(1, transactions.size(), "User should have one transaction");
+        assertEquals(1, transactions.size(), "User should have one transaction");
 
-    Transaction loadedTransaction = transactions.get(0);
-    assertEquals("2023-10-27", loadedTransaction.getDate().toString(), "Date should match saved transaction"); // Convert LocalDate to String
-    assertEquals(100.00, loadedTransaction.getAmount(), "Amount should match saved transaction");
-    assertEquals("Groceries", loadedTransaction.getCategory(), "Category should match saved transaction");
-    assertEquals("Expense", loadedTransaction.getType(), "Type should match saved transaction");
-}
-
+        Transaction loadedTransaction = transactions.get(0);
+        assertEquals("2023-10-27", loadedTransaction.getDate().toString(), "Date should match saved transaction");
+        assertEquals(100.00, loadedTransaction.getAmount(), "Amount should match saved transaction");
+        assertEquals("Groceries", loadedTransaction.getCategory(), "Category should match saved transaction");
+        assertEquals("Expense", loadedTransaction.getType(), "Type should match saved transaction");
+    }
 
     @Test
     public void testLoadTransactions_NonExistentUser() {
-        // Act
         List<Transaction> transactions = expenseTracker.loadTransactions("nonexistent_user");
-
-        // Assert
         assertTrue(transactions.isEmpty(), "Non-existent user should return an empty list of transactions");
     }
 
     @Test
     public void testLoadAllUsers() {
-       
         String userId1 = "user1";
         String userId2 = "user2";
         LocalDate date1 = LocalDate.parse("2023-10-27");
-        LocalDate date = LocalDate.parse("2023-10-28");
-        Transaction transaction1 = new Transaction(date1, 100.00, "Groceries", "Expense");
-        Transaction transaction2 = new Transaction(date, 200.00, "Rent", "Expense");
+        LocalDate date2 = LocalDate.parse("2023-10-28");
+        Transaction transaction1 = new Transaction(date1, 100.00, "Groceries", "Expense", userId1);
+        Transaction transaction2 = new Transaction(date2, 200.00, "Rent", "Expense", userId2);
+
         expenseTracker.saveTransaction(userId1, transaction1);
         expenseTracker.saveTransaction(userId2, transaction2);
 
+        expenseTracker.loadAllUsers();
 
-        expenseTracker.loadAllUsers(); 
-
-      
         assertEquals(2, expenseTracker.getUserMap().size(), "There should be two users loaded into the map");
 
         JSONObject user1 = expenseTracker.getUserMap().get("user1");
@@ -221,9 +190,9 @@ public class ExpenseTrackerTest {
         assertNotNull(user2, "User2 should be present in the user map");
         assertEquals("user2", user2.get("user_id"), "User2 ID should match");
     }
+
     @Test
     public void testParseJsonFile_ValidArray() throws Exception {
-        
         String testFilePath = "testArray.json";
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
@@ -234,16 +203,13 @@ public class ExpenseTrackerTest {
             file.write(jsonArray.toJSONString());
         }
 
-        
         JSONArray result = expenseTracker.parseJsonFile(testFilePath);
-
         assertNotNull(result, "The result should not be null for a valid JSON array file.");
         assertEquals(jsonArray, result, "The parsed JSON array should match the expected content.");
     }
+
     @AfterEach
     public void tearDown() throws IOException {
-      
         Files.deleteIfExists(Path.of(testFileName));
     }
-
 }

@@ -31,6 +31,10 @@ public class ExpenseTracker {
         loadFromJson(jsonFilePath);
     }
 
+    public Map<String, JSONObject>getUserMap(){
+        return userMap;
+    }
+
     private void loadFromJson(String filePath) {
         JSONArray usersArray = parseJsonFile(filePath);
         if (usersArray != null) {
