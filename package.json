@@ -8,7 +8,7 @@
     },
     "scripts": {
         "start": "concurrently \"npm run start-frontend\" \"mvn -f ./pom.xml spring-boot:run\"",
-        "start-frontend": "npm start --prefix frontend",
-        "build-frontend": "npm run build --prefix frontend"
+  "start-frontend": "npm run dev --prefix my-expense-tracker",
+  "build-frontend": "npm run build --prefix my-expense-tracker"
     }
 }

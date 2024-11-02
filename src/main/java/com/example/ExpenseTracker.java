@@ -1,17 +1,17 @@
 package com.example;
+
 import java.util.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-
+import org.springframework.stereotype.Service;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+@Service
 public class ExpenseTracker {
 
     private List<Transaction> transactions;
@@ -22,7 +22,6 @@ public class ExpenseTracker {
         this.transactions = new ArrayList<>();
         this.userMap = new HashMap<>();
         this.filePath = "transactions.json";
-        
     }
 
     public ExpenseTracker(String jsonFilePath) {
@@ -32,51 +31,48 @@ public class ExpenseTracker {
         loadFromJson(jsonFilePath);
     }
 
-
     private void loadFromJson(String filePath) {
         JSONArray usersArray = parseJsonFile(filePath);
-
         if (usersArray != null) {
             for (Object obj : usersArray) {
                 JSONObject userObj = (JSONObject) obj;
                 String userId = (String) userObj.get("user_id");
                 userMap.put(userId, userObj);
-
                 JSONArray userTransactions = (JSONArray) userObj.get("transactions");
                 for (Object txnObj : userTransactions) {
                     JSONObject txnJson = (JSONObject) txnObj;
                     LocalDate date = LocalDate.parse((String) txnJson.get("date"));
-                    int amount = ((Long) txnJson.get("amount")).intValue();
+                    double amount = ((Number) txnJson.get("amount")).doubleValue();
                     String category = (String) txnJson.get("category");
                     String type = (String) txnJson.get("type");
 
-                    Transaction transaction = new Transaction(date, amount, category, type);
+                    Transaction transaction = new Transaction(date, amount, category, type, userId);
                     transactions.add(transaction);
                 }
             }
         }
-
     }
 
-    public void addIncome(LocalDate date, int amount, String category){
-        Transaction income = new Transaction(date, amount, category, "income");
+    public void addIncome(String userId, LocalDate date, double amount, String category) {
+        Transaction income = new Transaction(date, amount, category, "income", userId);
         transactions.add(income);
+        saveTransaction(userId, income);
     }
 
-    public void addExpense(LocalDate date, int amount, String category){
-        Transaction expense = new Transaction(date, amount, category, "expense");
+    public void addExpense(String userId, LocalDate date, double amount, String category) {
+        Transaction expense = new Transaction(date, amount, category, "expense", userId);
         transactions.add(expense);
+        saveTransaction(userId, expense);
     }
 
     public List<Transaction> getTransactions() {
         return transactions;
     }
-    // Initialize the map with data from JSON
+
     public void loadAllUsers() {
         JSONParser parser = new JSONParser();
         try (FileReader reader = new FileReader("transactions.json")) {
             JSONArray usersArray = (JSONArray) parser.parse(reader);
-
             for (Object obj : usersArray) {
                 JSONObject userObj = (JSONObject) obj;
                 String userId = (String) userObj.get("user_id");
@@ -87,40 +83,26 @@ public class ExpenseTracker {
         }
     }
 
-    /**
-     * Filters transactions by category and returns the list of matching transactions.
-     * @param category The category to filter by.
-     * @return A list of transactions that match the specified category.
-     */
     public List<Transaction> filterTransactionsByCategory(String category) {
         List<Transaction> filteredTransactions = new ArrayList<>();
         for (Transaction t : transactions) {
-            if (t.getCategory().equals(category)) {
+            if (t.getCategory().equalsIgnoreCase(category)) {
                 filteredTransactions.add(t);
             }
         }
         return filteredTransactions;
     }
 
-    /**
-     * Calculates the total amount for transactions in the specified category.
-     * @param category The category to sum up.
-     * @return The total amount for the specified category.
-     */
-    public int showTotalByCategory(String category) {
-        int total = 0;
+    public double showTotalByCategory(String category) {
+        double total = 0;
         for (Transaction t : transactions) {
-            if (t.getCategory().equals(category)) {
+            if (t.getCategory().equalsIgnoreCase(category)) {
                 total += t.getAmount();
             }
         }
         return total;
     }
 
-    /**
-     * Returns a string representation of all transactions for display.
-     * @return A string containing all transactions.
-     */
     public String displayAllTransactions() {
         StringBuilder allTransactions = new StringBuilder();
         for (Transaction t : transactions) {
@@ -129,157 +111,89 @@ public class ExpenseTracker {
         return allTransactions.toString();
     }
 
-    /**
-     * Returns a list of transactions for the specified month and year.
-     * @param month The month to filter by (1 for January, 12 for December).
-     * @param year The year to filter by.
-     * @return A list of transactions within the specified month and year.
-     */
-    public List<Transaction> getTransactionsByMonth(int month, int year){
+    public List<Transaction> getTransactionsByMonth(int month, int year) {
         List<Transaction> monthlyTransactions = new ArrayList<>();
-        for (Transaction t : transactions){
-            if(t.getDate().getMonthValue() == month && t.getDate().getYear() == year){
+        for (Transaction t : transactions) {
+            if (t.getDate().getMonthValue() == month && t.getDate().getYear() == year) {
                 monthlyTransactions.add(t);
             }
         }
         return monthlyTransactions;
     }
 
-
-    /**
-     * Generates a monthly report for the specified month and year.
-     * @param month The month to generate the report for (1-12).
-     * @param year The year to generate the report for.
-     * @return A formatted string containing the report with totals and transaction details.
-     */
-    public String generateMonthlyReport(int month, int year){
-        List<Transaction> monthlyTransactions=getTransactionsByMonth(month, year);
-        int totalIncome = 0;
-        int totalExpenses=0;
-
+    public String generateMonthlyReport(int month, int year) {
+        List<Transaction> monthlyTransactions = getTransactionsByMonth(month, year);
+        double totalIncome = 0;
+        double totalExpenses = 0;
         StringBuilder report = new StringBuilder("Monthly Report for " + month + "/" + year + ":\n");
         report.append("---------------------------------------------------\n");
 
-        for (Transaction t : monthlyTransactions){
+        for (Transaction t : monthlyTransactions) {
             report.append(t).append("\n");
-            if(t.getType().equalsIgnoreCase("Income")){
-                totalIncome+=t.getAmount();
+            if (t.getType().equalsIgnoreCase("income")) {
+                totalIncome += t.getAmount();
+            } else if (t.getType().equalsIgnoreCase("expense")) {
+                totalExpenses += t.getAmount();
             }
-            if(t.getType().equalsIgnoreCase("Expense")){
-                totalExpenses+=t.getAmount();
-            }
-           
         }
-        System.out.println("randomtestcheck");
 
-        int netBalance = totalIncome - totalExpenses;
+        double netBalance = totalIncome - totalExpenses;
         report.append("---------------------------------------------------\n");
         report.append("Total Income: ").append(totalIncome).append("\n");
         report.append("Total Expenses: ").append(totalExpenses).append("\n");
         report.append("Net Balance: ").append(netBalance).append("\n");
 
         return report.toString();
-
     }
 
-    
-  
-
-        /**
-     * Save the user's transaction to a JSON file.
-     * If the user already exists, the transaction will be added to their list.
-     * If the user does not exist, a new entry for the user will be created.
-     *
-     * @param user_id The user ID to associate with the transaction.
-     * @param transaction The transaction to be saved (e.g., date, amount, category, type).
-     */
-
-   public void saveTransaction(String userId, Transaction transaction) {
-    JSONObject userObj = userMap.getOrDefault(userId, new JSONObject());
-    
-    // Initialize user object if it doesn't exist
-    if (!userMap.containsKey(userId)) {
-        userObj.put("user_id", userId);
-        userObj.put("transactions", new JSONArray());
+    public void saveTransaction(String userId, Transaction transaction) {
+        JSONObject userObj = userMap.getOrDefault(userId, new JSONObject());
+        if (!userMap.containsKey(userId)) {
+            userObj.put("user_id", userId);
+            userObj.put("transactions", new JSONArray());
+            userMap.put(userId, userObj);
+        }
+        
+        JSONArray userTransactions = (JSONArray) userObj.get("transactions");
+        if (transaction != null && transaction.toJsonObject() != null) {
+            userTransactions.add(transaction.toJsonObject());
+        }
         userMap.put(userId, userObj);
+
+        JSONArray usersArray = new JSONArray();
+        usersArray.addAll(userMap.values());
+
+        try (FileWriter file = new FileWriter(filePath)) {
+            file.write(usersArray.toJSONString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    // Retrieve or initialize the transactions array
-    JSONArray userTransactions = (JSONArray) userObj.get("transactions");
-    if (userTransactions == null) {
-        userTransactions = new JSONArray();
-        userObj.put("transactions", userTransactions);
-    }
-
-    // Convert Transaction to JSON and add to transactions array
-    if (transaction != null && transaction.toJsonObject() != null) {
-        userTransactions.add(transaction.toJsonObject());
-    } else {
-        System.err.println("Transaction or transaction JSON conversion failed for user: " + userId);
-    }
-
-    // Update userMap with modified user object
-    userMap.put(userId, userObj);
-
-    // Prepare JSON array for saving
-    JSONArray usersArray = new JSONArray();
-    usersArray.addAll(userMap.values());
-
-    // Debugging output to verify contents before saving
-    System.out.println("Data to be saved for userId " + userId + ": " + usersArray.toJSONString());
-
-    // Save to JSON file
-    try (FileWriter file = new FileWriter(filePath)) {
-        file.write(usersArray.toJSONString());
-        file.flush();
-        System.out.println("User data saved successfully.");
-    } catch (IOException e) {
-        System.err.println("Error saving transaction to file: " + e.getMessage());
-        e.printStackTrace();
-    }
-}
-
-    
-    
-
-    /**
-     * Load and return a list of transactions for a given user.
-     * If the user does not exist, an empty list will be returned.
-     *
-     * @param user_id The user ID whose transactions are being requested.
-     * @return A list of Transaction objects for the specified user.
-     */
     public List<Transaction> loadTransactions(String user_id) {
         List<Transaction> transactionsList = new ArrayList<>();
-
-        // Get user data directly from the map
         JSONObject userObj = userMap.get(user_id);
         if (userObj != null) {
             JSONArray userTransactions = (JSONArray) userObj.get("transactions");
             for (Object transactionObj : userTransactions) {
                 JSONObject transactionJson = (JSONObject) transactionObj;
                 LocalDate date = LocalDate.parse((String) transactionJson.get("date"));
-                double amount = (double) transactionJson.get("amount");
+                double amount = ((Number) transactionJson.get("amount")).doubleValue();
                 String category = (String) transactionJson.get("category");
                 String type = (String) transactionJson.get("type");
 
-                Transaction transaction = new Transaction(date, amount, category, type);
+                Transaction transaction = new Transaction(date, amount, category, type, user_id);
                 transactionsList.add(transaction);
             }
         }
         return transactionsList;
     }
 
-    public Map<String, JSONObject> getUserMap(){
-        return userMap;
-    }
-
     public JSONArray parseJsonFile(String filePath) {
         JSONParser parser = new JSONParser();
         try (FileReader reader = new FileReader(filePath)) {
             Object obj = parser.parse(reader);
-    
-       
             if (obj instanceof JSONArray) {
                 return (JSONArray) obj;
             } else {
@@ -290,10 +204,4 @@ public class ExpenseTracker {
             return null;
         }
     }
-
-
-    
-
- 
 }
-    
