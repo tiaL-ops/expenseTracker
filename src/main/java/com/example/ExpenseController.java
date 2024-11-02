@@ -16,11 +16,11 @@ public class ExpenseController {
     }
     @GetMapping("/test")
     public String testendpoint() {
-        return "Backend hello  working";
+        return "Backend  working";
         
     }
 
-    @PostMapping("/transactions")
+    @RequestMapping(value = "/transactions", method = RequestMethod.POST)
 public void createTransaction(@RequestParam String userId, @RequestBody Transaction transaction) {
     if ("income".equalsIgnoreCase(transaction.getType())) {
         expenseTracker.addIncome(userId, transaction.getDate(), transaction.getAmount(), transaction.getCategory());
