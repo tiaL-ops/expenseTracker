@@ -8,8 +8,33 @@ function App() {
     const [type, setType] = useState(''); 
 
     const handleTransactionSubmit = async () => {
-        console.log("Form submitted");
+        const transaction = {
+            date,
+            amount,
+            category,
+            type,
+        };
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/transactions?userId=${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(transaction),
+            });
+
+            if (response.ok) {
+                alert('Transaction submitted successfully!');
+            } else {
+                alert('Failed to submit transaction');
+            }
+        } catch (error) {
+            console.error('Error submitting transaction:', error);
+            alert('An error occurred');
+        }
     };
+
 
     return (
         <div>

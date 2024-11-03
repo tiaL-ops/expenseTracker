@@ -3,9 +3,11 @@ package com.example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://127.0.0.1:5173")
 public class ExpenseController {
 
     private final ExpenseTracker expenseTracker;
@@ -27,6 +29,10 @@ public void createTransaction(@RequestParam String userId, @RequestBody Transact
     } else {
         expenseTracker.addExpense(userId, transaction.getDate(), transaction.getAmount(), transaction.getCategory());
     }
+}
+@GetMapping("/transactions")
+public List<Transaction> getTransactions() {
+    return expenseTracker.getTransactions();
 }
 
 }

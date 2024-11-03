@@ -1,1 +1,1 @@
-[{"user_id":"user1","transactions":[{"date":"2023-10-05","amount":1000.0,"category":"Salary","type":"income","userId":"user1"}]}]
+[{"user_id":"se","transactions":[{"date":"2024-11-13","amount":2.0,"category":"3","type":"income","userId":"se"}]},{"user_id":"few3e","transactions":[{"date":"2024-11-20","amount":3.0,"category":"32","type":"expense","userId":"few3e"}]},{"user_id":"fe","transactions":[{"date":"2024-11-13","amount":2.0,"category":"3","type":"income","userId":"fe"}]}]
