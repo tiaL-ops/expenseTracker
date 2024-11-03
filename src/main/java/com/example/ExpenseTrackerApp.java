@@ -7,5 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ExpenseTrackerApp {
     public static void main(String[] args) {
         SpringApplication.run(ExpenseTrackerApp.class, args);
+            System.out.println("test");
     }
 }

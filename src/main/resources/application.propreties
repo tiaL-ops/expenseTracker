@@ -1,7 +1,7 @@
 spring.main.web-application-type=servlet
-spring.datasource.url=jdbc:h2:mem:testdb
-spring.datasource.driverClassName=org.h2.Driver
-spring.datasource.username=sa
-spring.datasource.password=password
-spring.h2.console.enabled=true
-spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://localhost:3306/expense_tracker_db
+spring.datasource.username=root
+spring.datasource.password=MODEPASY  
+spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=update  
+spring.jpa.show-sql=true  # Optional: shows SQL commands in console
