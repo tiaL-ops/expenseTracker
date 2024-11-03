@@ -1,15 +1,22 @@
 package com.example;
-
 import java.time.LocalDate;
 import org.json.simple.JSONObject;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private LocalDate date;
     private double amount;
     private String category;
     private String type;
     private String userId;
 
+     // Default constructor (required by JPA)
+     public Transaction() { }
     // Constructor
     public Transaction(LocalDate date, double amount, String category, String type, String userId) {
         this.date = date;

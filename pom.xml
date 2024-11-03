@@ -1,42 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.example</groupId>
   <artifactId>demo</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-
   <name>demo</name>
   <url>http://www.example.com</url>
+  
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.0</version> 
+    <version>3.1.0</version>
     <relativePath />
-</parent>
+  </parent>
 
-
-<properties>
+  <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-</properties>
+  </properties>
 
   <dependencies>
-
-  
-
     <!-- Spring Boot Web Dependency -->
     <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-   
-  <!-- JUnit 5 Dependency -->
+    <!-- Spring Boot JPA Dependency (includes Hibernate) -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <!-- H2 Database (for development/testing) -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- JUnit 5 Dependency -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
@@ -44,11 +52,19 @@
       <scope>test</scope>
     </dependency>
 
-     <dependency>
-        <groupId>com.googlecode.json-simple</groupId>
-        <artifactId>json-simple</artifactId>
-        <version>1.1.1</version>
-         
+    <!-- JSON Simple Dependency -->
+    <dependency>
+      <groupId>com.googlecode.json-simple</groupId>
+      <artifactId>json-simple</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+
+    <!-- Mockito Dependency for Testing -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>4.6.1</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -91,25 +107,24 @@
         <version>3.0.0</version>
       </plugin>
 
-    <!-- SpringBoot -->
+      <!-- Spring Boot Maven Plugin -->
       <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <configuration>
-                <mainClass>com.example.ExpenseTrackerApp</mainClass> <!-- Replace with your main class fully qualified name -->
-            </configuration>
-        </plugin>
-
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>com.example.ExpenseTrackerApp</mainClass>
+        </configuration>
+      </plugin>
 
       <!-- Exec Maven Plugin for running the main class -->
-     <plugin>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>exec-maven-plugin</artifactId>
-      <version>3.0.0</version>
-      <configuration>
-        <mainClass>com.example.ExpenseTrackerApp</mainClass>
-      </configuration>
-    </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <mainClass>com.example.ExpenseTrackerApp</mainClass>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
