@@ -4,4 +4,8 @@ spring.datasource.username=root
 spring.datasource.password=MODEPASY  
 spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
 spring.jpa.hibernate.ddl-auto=update  
-spring.jpa.show-sql=true  # Optional: shows SQL commands in console
+spring.jpa.show-sql=true  
+logging.level.org.springframework.orm.jpa=DEBUG
+logging.level.org.hibernate.SQL=DEBUG
+
+

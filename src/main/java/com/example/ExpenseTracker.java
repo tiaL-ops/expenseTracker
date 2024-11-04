@@ -65,4 +65,12 @@ public class ExpenseTracker {
         return String.format("Monthly Report for %d/%d:\nTotal Income: %.2f\nTotal Expenses: %.2f\nNet Balance: %.2f",
                 month, year, totalIncome, totalExpenses, netBalance);
     }
+
+   
+    public void testSaveTransaction() {
+        Transaction transaction = new Transaction(LocalDate.now(), 100.0, "test_category", "income", "test_user");
+        transactionRepository.save(transaction);
+        System.out.println("Transaction saved: " + transaction);
+    }
+    
 }

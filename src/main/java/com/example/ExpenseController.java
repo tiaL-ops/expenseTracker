@@ -35,4 +35,13 @@ public List<Transaction> getTransactions() {
     return expenseTracker.getTransactions();
 }
 
+@GetMapping("/test-save")
+public String testSaveTransaction() {
+    expenseTracker.testSaveTransaction();
+    return "Test transaction saved!";
+}
+
+
+
+
 }

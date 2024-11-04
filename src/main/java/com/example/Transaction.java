@@ -5,18 +5,28 @@ import org.json.simple.JSONObject;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "transactions")
 public class Transaction {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private LocalDate date;
-    private double amount;
+
+    private double amount;  
+
     private String category;
-    private String type;
+    
+    private String type; 
+
+    @Column(name = "user_id")
     private String userId;
 
      // Default constructor (required by JPA)
      public Transaction() { }
+
+
     // Constructor
     public Transaction(LocalDate date, double amount, String category, String type, String userId) {
         this.date = date;
