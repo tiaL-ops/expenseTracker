@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api")
@@ -11,10 +12,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class ExpenseController {
 
     private final ExpenseTracker expenseTracker;
+    private final TransactionRepository transactionRepository;
 
     @Autowired
-    public ExpenseController(ExpenseTracker expenseTracker) {
+    public ExpenseController(ExpenseTracker expenseTracker,TransactionRepository transactionRepository) {
         this.expenseTracker = expenseTracker;
+        this.transactionRepository = transactionRepository;
     }
     @GetMapping("/test")
     public String testendpoint() {
@@ -35,11 +38,12 @@ public List<Transaction> getTransactions() {
     return expenseTracker.getTransactions();
 }
 
-@GetMapping("/test-save")
-public String testSaveTransaction() {
-    expenseTracker.testSaveTransaction();
-    return "Test transaction saved!";
-}
+@GetMapping("/test-direct-save")
+    public String testDirectSave() {
+        Transaction transaction = new Transaction(LocalDate.now(), 100.0, "test_category", "income", "test_user");
+        transactionRepository.save(transaction);
+        return "Direct transaction saved!";
+    }
 
 
 

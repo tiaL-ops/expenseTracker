@@ -14,7 +14,7 @@ public class Transaction {
 
     private LocalDate date;
 
-    private double amount;  
+    private Double amount;  
 
     private String category;
     

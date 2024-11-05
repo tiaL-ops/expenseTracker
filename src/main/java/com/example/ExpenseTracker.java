@@ -2,12 +2,15 @@ package com.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class ExpenseTracker {
 
     private final TransactionRepository transactionRepository;
@@ -66,11 +69,14 @@ public class ExpenseTracker {
                 month, year, totalIncome, totalExpenses, netBalance);
     }
 
-   
+    @Transactional
     public void testSaveTransaction() {
         Transaction transaction = new Transaction(LocalDate.now(), 100.0, "test_category", "income", "test_user");
         transactionRepository.save(transaction);
+        
         System.out.println("Transaction saved: " + transaction);
+
     }
+    
     
 }
