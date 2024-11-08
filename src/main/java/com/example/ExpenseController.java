@@ -1,10 +1,15 @@
 package com.example;
+import com.example.LoginRequest;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import java.time.LocalDate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
 
 @RestController
 @RequestMapping("/api")
@@ -13,6 +18,8 @@ public class ExpenseController {
 
     private final ExpenseTracker expenseTracker;
     private final TransactionRepository transactionRepository;
+    private UserRepository userRepository;
+    private JwtService jwtService; 
 
     @Autowired
     public ExpenseController(ExpenseTracker expenseTracker,TransactionRepository transactionRepository) {
@@ -44,8 +51,21 @@ public List<Transaction> getTransactions() {
         transactionRepository.save(transaction);
         return "Direct transaction saved!";
     }
-
-
-
-
+    @PostMapping("/api/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        User user = userRepository.findByUserId(loginRequest.getUserid());
+        if (user != null && user.getPassword().equals(loginRequest.getPassword())) {
+            String token = jwtService.generateToken(user); 
+            return ResponseEntity.ok(new AuthResponse(token)); 
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials"); 
+    }
+    
+    @GetMapping("/api/transactions")
+    public ResponseEntity<?> getUserTransactions(@RequestHeader("Authorization") String token) {
+        String userId = jwtService.extractUserId(token); // Extract user ID from token
+        List<Transaction> transactions = transactionRepository.findByUserId(userId);
+        return ResponseEntity.ok(transactions);
+    }
+    
 }
