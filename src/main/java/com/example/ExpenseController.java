@@ -26,11 +26,11 @@ public class ExpenseController {
     }
 
     @RequestMapping(value = "/transactions", method = RequestMethod.POST)
-public void createTransaction(@RequestParam String userId, @RequestBody Transaction transaction) {
+public void createTransaction(@RequestParam User user, @RequestBody Transaction transaction) {
     if ("income".equalsIgnoreCase(transaction.getType())) {
-        expenseTracker.addIncome(userId, transaction.getDate(), transaction.getAmount(), transaction.getCategory());
+        expenseTracker.addIncome(transaction.getDate(), transaction.getAmount(), transaction.getCategory(),transaction.getUserId());
     } else {
-        expenseTracker.addExpense(userId, transaction.getDate(), transaction.getAmount(), transaction.getCategory());
+        expenseTracker.addExpense(transaction.getDate(), transaction.getAmount(), transaction.getCategory(),transaction.getUserId());
     }
 }
 @GetMapping("/transactions")
@@ -40,7 +40,12 @@ public List<Transaction> getTransactions() {
 
 @GetMapping("/test-direct-save")
     public String testDirectSave() {
-        Transaction transaction = new Transaction(LocalDate.now(), 100.0, "test_category", "income", "test_user");
+        User user= new User();
+        user.setUsername("helloTest");
+        user.setEmail("test@gmail.com");
+        user.setPassword("passWord");
+    
+        Transaction transaction = new Transaction(LocalDate.now(), 100.0, "test_category", "income",user);
         transactionRepository.save(transaction);
         return "Direct transaction saved!";
     }

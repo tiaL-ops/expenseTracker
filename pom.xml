@@ -44,6 +44,12 @@
     <scope>runtime</scope>
 </dependency>
 
+<!-- Persistence check?-->
+<dependency>
+    <groupId>javax.persistence</groupId>
+    <artifactId>persistence-api</artifactId>
+    <version>1.0.2</version>
+</dependency>
 
 
 
