@@ -15,7 +15,7 @@ public class User {
     private Long id;  
 
     @Column(name = "user_id", nullable = false, unique = true)
-    public String username; 
+    private String username; 
 
     @Column(nullable = false)
     private String password;
@@ -26,7 +26,7 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
     

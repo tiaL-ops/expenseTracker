@@ -58,6 +58,6 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction [date=" + date + ", amount=" + amount + ", category=" + category + ", type=" + type + ", userId=" + user.username + "]";
+        return "Transaction [date=" + date + ", amount=" + amount + ", category=" + category + ", type=" + type + ", userId=" + user.getId() + "]";
     }
 }
