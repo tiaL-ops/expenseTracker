@@ -1,74 +1,50 @@
 package com.example;
 
-
+import javax.annotation.processing.Generated;
 import javax.persistence.*;
-import java.time.LocalDate;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
+import java.util.List;
+import javax.persistence.OneToMany;
+import java.util.Date;
 
 @Entity
-@Table(name = "User")
+@Table(name = "users")  
 public class User {
-    
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;  
+
     @Column(name = "user_id", nullable = false, unique = true)
-    private String userid; 
+    private String username; 
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
-    @CreationTimestamp
-    private LocalDate createdDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
 
-    @UpdateTimestamp
-    private LocalDate updatedDate;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 
-    // Default constructor
+    
     public User() {}
 
-    // Parameterized constructor
-    public User(String userid, String password, String email) {
-        this.userid = userid;
-        this.password = password;
-        this.email = email;
-    }
-
-    // Getters
-    public String getUserid() {
-        return userid;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public LocalDate getCreatedDate() {
-        return createdDate;
-    }
-
-    public LocalDate getUpdatedDate() {
-        return updatedDate;
-    }
-
-    // Setters
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
-
-    public void setPassword(String password) {
+    // Constructor
+    public User(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    // Getters and setters
+    public Long getId() { return id; }
+    public String getUsername() { return username; }
+    public String getEmail() { return email; }
+    public Date getCreated() { return created; }
+
+    public void setUsername(String username) { this.username = username; }
+    public void setPassword(String password) { this.password = password; }
+    public void setEmail(String email) { this.email = email; }
 }

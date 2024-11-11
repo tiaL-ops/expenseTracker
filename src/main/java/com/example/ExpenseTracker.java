@@ -20,13 +20,13 @@ public class ExpenseTracker {
         this.transactionRepository = transactionRepository;
     }
 
-    public void addIncome(String userId, LocalDate date, double amount, String category) {
-        Transaction income = new Transaction(date, amount, category, "income", userId);
+    public void addIncome(LocalDate date, double amount, String category,User user) {
+        Transaction income = new Transaction(date, amount, category, "income",user);
         transactionRepository.save(income);
     }
 
-    public void addExpense(String userId, LocalDate date, double amount, String category) {
-        Transaction expense = new Transaction(date, amount, category, "expense", userId);
+    public void addExpense(LocalDate date, double amount, String category, User user) {
+        Transaction expense = new Transaction(date, amount, category, "expense", user);
         transactionRepository.save(expense);
     }
 
@@ -71,7 +71,12 @@ public class ExpenseTracker {
 
     @Transactional
     public void testSaveTransaction() {
-        Transaction transaction = new Transaction(LocalDate.now(), 100.0, "test_category", "income", "test_user");
+        User user= new User();
+        user.setUsername("helloTestFromExpenseTracker");
+        user.setEmail("test1@gmail.com");
+        user.setPassword("passWord");
+    
+        Transaction transaction = new Transaction(LocalDate.now(), 100.0, "test_category", "income", user);
         transactionRepository.save(transaction);
         
         System.out.println("Transaction saved: " + transaction);

@@ -37,12 +37,21 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
-<!-- Persistence Dependancy -->
+ <!-- SQL database -->
+    <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+
+<!-- Persistence check?-->
 <dependency>
     <groupId>javax.persistence</groupId>
     <artifactId>persistence-api</artifactId>
     <version>1.0.2</version>
 </dependency>
+
+
 
 <!-- Spring Transaction Management -->
 <dependency>
@@ -82,12 +91,6 @@
     <version>8.0.33</version>
     <scope>runtime</scope>
 </dependency>
-
- <!--Spring security  -->
-<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-security</artifactId>
-	</dependency>
 
   </dependencies>
 
