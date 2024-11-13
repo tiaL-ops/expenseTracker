@@ -1,10 +1,11 @@
 package com.example;
 
 import javax.annotation.processing.Generated;
-import javax.persistence.*;
+
 import java.util.List;
-import javax.persistence.OneToMany;
+import jakarta.persistence.*;
 import java.util.Date;
+
 
 @Entity
 @Table(name = "users")  
@@ -14,7 +15,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  
 
-    @Column(name = "user_id", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username; 
 
     @Column(nullable = false)
@@ -23,8 +24,14 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+
+    @Column(name = "updated_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Transaction> transactions;

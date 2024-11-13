@@ -21,7 +21,7 @@ public class Transaction {
     private String type; 
 
     @ManyToOne
-    @JoinColumn(name = "user_id",nullable =false)
+    @JoinColumn(name = "user_id", referencedColumnName = "username", nullable = false)
     private User user;
 
 
