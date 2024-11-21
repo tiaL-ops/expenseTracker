@@ -7,18 +7,13 @@ The **Expense Tracker** is a personal finance management tool that allows users 
 - Add and categorize income and expense transactions.
 - View a summary of transactions by category.
 - Generate monthly reports showing total income and expenses.
-- Data persistence using CSV files (currently in progress to migrate to SQL database).
+- SQL Database , linked with user
 
-## **Current Progress (Updated after each milestone)**
+## **Current Milestone IN progress: Login/Logout **
+- SQL Database linked with User and Transaction ✅
+-Spring Security
+-Jwt Auth
 
-### **Basic Functionality (Day 10 - Completed)**
-- Core expense tracking functions completed: add transactions, filter by category, view reports.
-- CSV-based data persistence implemented.
-- Backend API and database setup underway to support enhanced functionality in the application.
-
-### **Next Phase: User Interface and Frontend Development**
-- Transitioning to a web application format, using React for the frontend.
-- Integrating with the backend to support real-time data updates, interactive forms, and a responsive user experience.
 
 ## **How to Run the Console Application (for testing basic functionalities)**
 1. **Clone the repository**:

@@ -45,9 +45,10 @@ public void createTransaction(@RequestParam User user, @RequestBody Transaction 
 
     @GetMapping("/test-direct-save")
     public String testDirectSave() {
+        System.out.println("Endpoint invoked!");
         User user = new User();
-        user.setUsername("helloTest");
-        user.setEmail("test@gmail.com");
+        user.setUsername("helloTest1");
+        user.setEmail("test1@gmail.com");
         user.setPassword("passWord");
     
        
