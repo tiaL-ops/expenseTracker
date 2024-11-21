@@ -1,1 +1,116 @@
+# General OS-generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+nohup.out
+
+# Compiled files and build outputs
+*.class
+*.jar
+*.war
+*.ear
+*.pyc
+*.o
+*.so
+
+# Temporary files and directories
+*.swp
+*.tmp
+*.bak
+*.backup
+*.orig
+*.rej
+*~
+*.sublime-workspace
+*.sublime-project
+
+# Node.js-related files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+/node_modules
+
+# Spring Boot-specific files
 target/
+application.properties
+application.yml
+*.iml
+out/
+.env
+
+# Maven specific files
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+maven-archiver/
+maven-status/
+
+# Gradle specific files (if applicable)
+.gradle/
+build/
+
+# IDE-specific files
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+*.classpath
+*.project
+*.settings/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nbm/
+
+# VS Code
+.vscode/
+
+# Test and Coverage Reports
+/test-results/
+/coverage/
+*.lcov
+*.html
+*.xml
+
+# Local environment files
+.env
+.env.*
+*.local
+
+# Ignore sensitive information
+*.key
+*.crt
+*.pem
+*.pfx
+secrets.json
+secrets.env
+
+# Ignore archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Ignore temporary documentation files
+*.docx
+*.xlsx
+*.pptx
