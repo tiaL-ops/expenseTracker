@@ -16,7 +16,7 @@ public class SecurityConf {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable() 
             .authorizeRequests()
-            .requestMatchers("/login", "/signup").permitAll() // Public endpoints
+            .requestMatchers("/login", "/signup","/api/test-direct-save").permitAll() // Public endpoints
             .anyRequest().authenticated() // Protect all other endpoints
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); 
