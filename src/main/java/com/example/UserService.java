@@ -22,7 +22,7 @@ public class UserService {
         User user= new User();
 
         String hashedPassword = passwordEncoder.encode(password);
-
+        
         user.setUsername(user_id);
         user.setPassword(hashedPassword);
         user.setEmail(email);

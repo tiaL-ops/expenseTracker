@@ -35,6 +35,7 @@ yarn-error.log*
 
 # Dependency directories
 /node_modules
+target
 
 # Spring Boot-specific files
 target/
