@@ -2,4 +2,4 @@ application.properties
 resources
 target/
 .vscode
-node_modules
+node_modules/
